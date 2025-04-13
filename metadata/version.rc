@@ -1,0 +1,31 @@
+﻿#include "version.h"
+
+1 VERSIONINFO
+FILEVERSION PLUGIN_VER_MAJOR,PLUGIN_VER_MINOR,PLUGIN_VER_BUILD,PLUGIN_VER_REVISION
+FILEFLAGSMASK 0x3FL
+#ifdef _DEBUG
+FILEFLAGS 0x1L
+#else
+FILEFLAGS 0x0L
+#endif
+FILEOS 0x4L
+FILETYPE 0x1L
+FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "000004E4"
+        BEGIN
+            VALUE "FileDescription",   	PLUGIN_DESCRIPTION
+            VALUE "InternalName",       "CS2 HealthShot Drop"
+			VALUE "LegalCopyright",     "© GunServer"
+            VALUE "OriginalFilename",   "cs2_healthshot_drop.dll"
+            VALUE "ProductName",        "Counter-Strike 2 Server Plugin"
+            VALUE "ProductVersion",     PLUGIN_VERSION_STR
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0000, 1252
+    END
+END
