@@ -1,22 +1,38 @@
+/*
+ * CS2 HealthShot Drop
+ * Copyright (c) 2025 Vitamin
+ *
+ * This file is part of the CS2 HealthShot Drop project.
+ * Licensed under the BSD-3-Clause License. See LICENSE file in the project root for full license information.
+ */
+
 #pragma once
 
 #pragma warning(disable: 4100)
 
-#include <vector>
+class ISource2Server;
 
-#include "metamod_helper.hpp"
-#include "metamod_oslink.h"
+class CPlayerSlot
+{
+public:
+	CPlayerSlot(int slot): m_Data(slot)
+	{
+	}
+	bool operator==(const CPlayerSlot &other) const
+	{
+		return other.m_Data == m_Data;
+	}
 
-#include "sh_memory.h"
+private:
+	int m_Data;
+};
 
-#include "SDK/defs.hpp"
-#include "SDK/eiface.hpp"
-
-#include "metadata/version.h"
-
-#include "xbyak/xbyak.h"
+#include <cstdint>
+#include <ISmmPlugin.h>
+#include <version.h>
 
 #define PLUGIN_AUTHOR "Vitamin"
+#define SOURCE2SERVER_INTERFACE_VERSION "Source2Server001"
 
 class CServerPlugin: public ISmmPlugin
 {
@@ -45,7 +61,7 @@ public:
 	}
 	const char* GetName() override
 	{
-		return "CS2 HealthShot Drop";
+		return PLUGIN_NAME;
 	}
 	const char* GetURL() override
 	{
