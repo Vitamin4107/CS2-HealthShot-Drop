@@ -1,6 +1,15 @@
+/*
+ * CS2 HealthShot Drop
+ * Copyright (c) 2025 Vitamin
+ *
+ * This file is part of the CS2 HealthShot Drop project.
+ * Licensed under the BSD-3-Clause License. See LICENSE file in the project root for full license information.
+ */
+
 #pragma once
 
-#include <sstream>	// std::istringstream
+#include <sstream>
+#include <vector>
 
 #define WILDCARD_MARKER 0x2A
 
@@ -13,23 +22,23 @@ namespace MemUtils
 
 	static Signature ParseSignature(const std::string &sigStr)
 	{
+		using namespace std;
+
 		Signature sig;
-		std::istringstream iss(sigStr);
-		std::string byteStr;
+		istringstream iss(sigStr);
+		string byteStr;
 
 		while (iss >> byteStr)
 		{
-			if (byteStr == "?" 	||
-				byteStr == "??" ||
-				byteStr == "*")
+			if (byteStr == "?" || byteStr == "??" || byteStr == "*")
 			{
 				sig.bytes.push_back(WILDCARD_MARKER);
 			}
 			else
 			{
 				uint32_t byteValue;
-				std::istringstream converter(byteStr);
-				converter >> std::hex >> byteValue;
+				istringstream converter(byteStr);
+				converter >> hex >> byteValue;
 				sig.bytes.push_back(static_cast<uint8_t>(byteValue));
 			}
 		}
@@ -52,9 +61,7 @@ public:
 		Signature sig = ParseSignature(sigStr);
 		const size_t patternSize = sig.bytes.size();
 
-		if (!m_pBase 			||
-			sig.bytes.empty() 	||
-			m_uSize < patternSize)
+		if (!m_pBase || sig.bytes.empty() || m_uSize < patternSize)
 		{
 			return nullptr;
 		}

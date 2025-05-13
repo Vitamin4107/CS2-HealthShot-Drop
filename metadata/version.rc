@@ -17,9 +17,9 @@ BEGIN
         BLOCK "000004E4"
         BEGIN
             VALUE "FileDescription",   	PLUGIN_DESCRIPTION
-            VALUE "InternalName",       "CS2 HealthShot Drop"
+            VALUE "InternalName",       PLUGIN_NAME
 			VALUE "LegalCopyright",     "© GunServer"
-            VALUE "OriginalFilename",   "cs2_healthshot_drop.dll"
+            VALUE "OriginalFilename",   PLUGIN_FILE_NAME
             VALUE "ProductName",        "Counter-Strike 2 Server Plugin"
             VALUE "ProductVersion",     PLUGIN_VERSION_STR
         END

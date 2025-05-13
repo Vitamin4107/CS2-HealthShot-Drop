@@ -1,8 +1,13 @@
 #pragma once
+
+#define PLUGIN_NAME "@PROJECT_NAME@"
+#define PLUGIN_FILE_NAME "@OUTPUT_NAME@.dll"
+
 #define PLUGIN_DESCRIPTION "Allows players to drop the healthshot from their inventory"
-#define PLUGIN_VER_MAJOR 1
-#define PLUGIN_VER_MINOR 0
-#define PLUGIN_VER_BUILD 0
+
+#define PLUGIN_VER_MAJOR @PROJECT_VERSION_MAJOR@
+#define PLUGIN_VER_MINOR @PROJECT_VERSION_MINOR@
+#define PLUGIN_VER_BUILD @PROJECT_VERSION_PATCH@
 #define PLUGIN_VER_REVISION 0
 #define STRINGIFY(x) #x
 #define PLUGIN_VERSION_STR_HELER(major, minor, build, rev)  STRINGIFY(major) "." STRINGIFY(minor) "." STRINGIFY(build) "." STRINGIFY(rev)
