@@ -15,7 +15,7 @@
 
 1. **Cloning the Repository:**
   ```bash
-  git clone https://github.com/YourUsername/CS2-HealthShot-Drop.git
+  git clone https://github.com/Vitamin4107/CS2-HealthShot-Drop.git
   ```
 2. **(Optional) Updating Submodules:**
   If you will want use submodules:
