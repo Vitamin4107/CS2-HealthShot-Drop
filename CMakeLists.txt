@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 
-project("CS2 HealthShot Drop" VERSION 1.0.1 LANGUAGES CXX)
+project("CS2 HealthShot Drop" VERSION 1.0.2.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -25,7 +25,7 @@ configure_file(	"${CMAKE_CURRENT_SOURCE_DIR}/metadata/version.in"
 				"${CMAKE_CURRENT_BINARY_DIR}/version.h"
 				@ONLY)
 
-set(METAMOD_CORE_PATH "${CMAKE_SOURCE_DIR}/../metamod/core")
+set(METAMOD_CORE_PATH "${CMAKE_SOURCE_DIR}/../metamod-source/core")
 set(SOURCES
 			"${CMAKE_SOURCE_DIR}/utils/detour_manager.cpp"
 			"${CMAKE_SOURCE_DIR}/${PLUGIN_NAME}.cpp"

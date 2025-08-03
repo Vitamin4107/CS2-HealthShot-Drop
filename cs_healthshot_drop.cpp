@@ -8,6 +8,8 @@
 
 #include "cs_healthshot_drop.hpp"
 
+#include <stdio.h>
+
 #include <metamod_oslink.h>
 #include <sh_memory.h>
 #include <xbyak/xbyak.h>
@@ -27,8 +29,6 @@ bool CServerPlugin::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen,
 	ISource2Server* pSource2Server = nullptr;
 	GET_V_IFACE_ANY(GetServerFactory, pSource2Server, ISource2Server, SOURCE2SERVER_INTERFACE_VERSION);
 
-	META_CONPRINTF("Version: %s\n", PLUGIN_VERSION_STR);
-
 	return ApplyInlineDetour(pSource2Server, error, maxlen);
 }
 
@@ -45,9 +45,6 @@ bool CServerPlugin::Unload(char *error, size_t maxlen)
 
 bool CServerPlugin::ApplyInlineDetour(const void* pLibrary, char* error, size_t maxlen)
 {
-	using namespace std;
-	using namespace Xbyak;
-
 	CMemoryUtils pMemoryUtils;
 	if (!pMemoryUtils.SetupLibrary(pLibrary))
 	{
@@ -55,18 +52,11 @@ bool CServerPlugin::ApplyInlineDetour(const void* pLibrary, char* error, size_t 
 		return false;
 	}
 
-	const string sigStr = "48 89 74 24 20 57 41 54 41 57 48 83 EC 40 45 0F B6 F8";
-	void* pSigAddr = pMemoryUtils.FindSignature(sigStr);
-	if (!pSigAddr)
+	const std::string sigStr = "48 8B 47 30 84 DB";
+	void* pDetourAddr = pMemoryUtils.FindSignature(sigStr);
+	if (!pDetourAddr)
 	{
 		sprintf_s(error, maxlen, "Signature not found, please contact with %s.", PLUGIN_AUTHOR);
-		return false;
-	}
-
-	void* pDetourAddr = reinterpret_cast<uint8_t*>(pSigAddr) + 0x1A8;
-	if (!ValidateTargetOpcodes(pDetourAddr))
-	{
-		sprintf_s(error, maxlen, "Expected instructions do not match, please contact with %s", PLUGIN_AUTHOR);
 		return false;
 	}
 
@@ -78,47 +68,31 @@ bool CServerPlugin::ApplyInlineDetour(const void* pLibrary, char* error, size_t 
 		return false;
 	}
 
-	CodeGenerator code(requiredSize, pTrampoline);
+	Xbyak::CodeGenerator code(requiredSize, pTrampoline);
 
-	auto& ecx = code.ecx;
 	auto& rax = code.rax;
-	auto& rsi = code.rsi;
-	auto& rcx = code.rcx;
-	auto& r11 = code.r11;
+	auto& ecx = code.ecx;
+	auto& rdi = code.rdi;
+	auto& rdx = code.rdx;
+	auto& r8 = code.r8;
 	auto& bl = code.bl;
 
 	code.cmp(ecx, 0xFFFFFFFD);
-	code.mov(rcx, code.ptr[rsi + 0x30]);
-	code.jne("original");
-	code.or_(rax, 1);
-	code.jmp("ret_label");
+	code.mov(rax, code.ptr[rdi + 0x30]);
+	code.jnz("original");
+	code.or_(rdx, 0x01);
+	code.jmp("ret_bypass");
 
 	code.L("original");
 	code.test(bl, bl);
 
-	code.L("ret_label");
-	code.mov(r11, reinterpret_cast<uintptr_t>(pDetourAddr) + 6);
-	code.jmp(r11);
+	code.L("ret_bypass");
+	code.mov(r8, reinterpret_cast<uintptr_t>(pDetourAddr) + 0x06);
+	code.jmp(r8);
 
 	if (!g_detourManager.InstallDetour(pDetourAddr, pTrampoline))
 	{
 		sprintf_s(error, maxlen, "Detour hook not installed, please contact with %s", PLUGIN_AUTHOR);
-		return false;
-	}
-
-	return true;
-}
-
-bool CServerPlugin::ValidateTargetOpcodes(const void* pTargetAddr)
-{
-	const uint8_t expectedOpCodes[] = {0x48, 0x8B, 0x4E, 0x30, 0x84, 0xDB};
-	const size_t opCodesSize = sizeof(expectedOpCodes);
-
-	uint8_t foundOpCodes[opCodesSize] = {};
-	memcpy(foundOpCodes, pTargetAddr, opCodesSize);
-
-	if (memcmp(foundOpCodes, expectedOpCodes, opCodesSize) != 0)
-	{
 		return false;
 	}
 

@@ -74,7 +74,6 @@ public:
 
 public:
 	bool ApplyInlineDetour(const void*, char*, size_t);
-	bool ValidateTargetOpcodes(const void*);
 };
 
 extern CServerPlugin g_ServerPlugin;
